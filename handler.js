@@ -5,7 +5,7 @@ const calendar = google.calendar("v3");
 
 const SCOPES = ["https://www.googleapis.com/auth/calendar.readonly"];              // 1
 
-const credentials = {
+const credentials = {                                                      // Note B
   client_id: process.env.CLIENT_ID,
   project_id: process.env.PROJECT_ID,
   client_secret: process.env.CLIENT_SECRET,
@@ -13,9 +13,10 @@ const credentials = {
   auth_uri: "https://accounts.google.com/o/oauth2/auth",
   token_uri: "https://oauth2.googleapis.com/token",
   auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
-  redirect_uris: ["https://YOUR_GITHUB_USERNAME.github.io/meet-app/"],
-  javascript_origins: ["https://YOUR_GITHUB_USERNAME.github.io", "http://localhost:3000"],
+  redirect_uris: ["https://swingwing777.github.io/buster-citymeet/"],
+  javascript_origins: ["https://swingwing777.github.io", "http://localhost:3000"],
 };
+
 const { client_secret, client_id, redirect_uris, calendar_id } = credentials;
 const oAuth2Client = new google.auth.OAuth2(
   client_id,
