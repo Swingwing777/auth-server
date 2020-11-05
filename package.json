@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/Swingwing777/auth-server/issues"
   },
-  "homepage": "https://github.com/Swingwing777/auth-server#readme"
+  "homepage": "https://github.com/Swingwing777/auth-server#readme",
+  "dependencies": {
+    "googleapis": "^63.0.0"
+  }
 }
