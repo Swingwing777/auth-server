@@ -3,9 +3,9 @@ const { google } = require("googleapis");
 const OAuth2 = google.auth.OAuth2;
 const calendar = google.calendar("v3");
 
-const SCOPES = ["https://www.googleapis.com/auth/calendar.readonly"];              // 1
+const SCOPES = ["https://www.googleapis.com/auth/calendar.readonly"];
 
-const credentials = {                                                      // Note B
+const credentials = {
   client_id: process.env.CLIENT_ID,
   project_id: process.env.PROJECT_ID,
   client_secret: process.env.CLIENT_SECRET,
@@ -51,6 +51,7 @@ module.exports.getAccessToken = async (event) => {
   const code = decodeURIComponent(`${event.pathParameters.code}`);
 
   return new Promise((resolve, reject) => {
+
     /**
      *  Exchange authorization code for access token with a “callback” after the exchange,
      *  The callback in this case is an arrow function with the results as parameters: “err” and “token.”
