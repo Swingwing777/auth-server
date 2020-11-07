@@ -76,6 +76,7 @@
     const getToken =
       "https://9a81gfiskk.execute-api.eu-central-1.amazonaws.com/dev/api/token/";
 
+    // See notes for alternative code if the URL segment includes a '/'  
     getAccessToken.onclick = function () {
       const getTokenRequest = getToken + codeValue.value;
       fetch(getTokenRequest)
@@ -95,6 +96,7 @@
 
     getEvents.onclick = function () {
       const { access_token } = JSON.parse(accessTokenElement.innerText);
+      // "/" + 2 added to CF code get 2 events
       const eventRequest = getCalendarEvents + access_token + "/" + 2;
       fetch(eventRequest)
         .then(function (response) {
