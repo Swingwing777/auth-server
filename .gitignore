@@ -7,3 +7,6 @@ jspm_packages
 
 # environment variables
 config.json
+
+# files
+handler-ebere.js

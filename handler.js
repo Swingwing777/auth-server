@@ -14,7 +14,7 @@ const credentials = {
   token_uri: "https://oauth2.googleapis.com/token",
   auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
   redirect_uris: ["https://swingwing777.github.io/buster-citymeet/"],
-  javascript_origins: ["https://swingwing777.github.io", "http://localhost:3000"],
+  javascript_origins: ["https://swingwing777.github.io", "http://localhost:3000", "http://127.0.0.1:8080"],
 };
 
 const { client_secret, client_id, redirect_uris, calendar_id } = credentials;
@@ -32,7 +32,8 @@ module.exports.getAuthURL = async () => {
   return {
     statusCode: 200,
     headers: {
-      "Access-Control-Allow-Origin": "*",
+      'Access-Control-Allow-Origin': '*',
+      // 'Access-Control-Allow-Credentials': true,
     },
     body: JSON.stringify({
       authUrl: authUrl,
@@ -51,7 +52,6 @@ module.exports.getAccessToken = async (event) => {
   const code = decodeURIComponent(`${event.pathParameters.code}`);
 
   return new Promise((resolve, reject) => {
-
     /**
      *  Exchange authorization code for access token with a “callback” after the exchange,
      *  The callback in this case is an arrow function with the results as parameters: “err” and “token.”
@@ -69,7 +69,8 @@ module.exports.getAccessToken = async (event) => {
       return {
         statusCode: 200,
         headers: {
-          "Access-Control-Allow-Origin": "*",
+          'Access-Control-Allow-Origin': '*',
+          //'Access-Control-Allow-Credentials': true,
         },
         body: JSON.stringify(token),
       };
@@ -79,6 +80,64 @@ module.exports.getAccessToken = async (event) => {
       console.error(err);
       return {
         statusCode: 500,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify(err),
+      };
+    });
+};
+
+module.exports.getCalendarEvents = async (event) => {
+
+  const oAuth2Client = new google.auth.OAuth2(
+    client_id,
+    client_secret,
+    redirect_uris[0]
+  );
+  // Get authorization code from the URL query
+  const access_token = `${event.pathParameters.access_token}`;
+
+  oAuth2Client.setCredentials({ access_token });
+
+  return new Promise((resolve, reject) => {
+    calendar.events.list(
+      {
+        calendarId: calendar_id.trim(),
+        auth: oAuth2Client,
+        timeMin: new Date().toISOString(),
+        // maxResults: event.pathParameters.max_results || 2,
+        singleEvents: true,
+        orderBy: "startTime",
+      },
+      (error, response) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(response);
+        }
+      }
+    );
+  })
+    .then((results) => {
+      return {
+        statusCode: 200,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify({
+          events: results.data.items,
+        }),
+      };
+    })
+    .catch((err) => {
+      // Handle error
+      console.error(err);
+      return {
+        statusCode: 500,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+        },
         body: JSON.stringify(err),
       };
     });
